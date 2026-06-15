@@ -47,7 +47,7 @@ func (h *Handlers) Sensors(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) Anomalies(w http.ResponseWriter, r *http.Request) {
 	const q = `SELECT sensor_id, weight_kg, item_type, topic, timestamp
 	           FROM sensor_log
-	           WHERE topic = 'anomaly'
+	           WHERE topic = 'anamoly'
 	           ORDER BY timestamp DESC
 	           LIMIT 50`
 	h.writeRows(w, q)
