@@ -297,11 +297,11 @@
     {
         "id": "28173aa55b6e1717",
         "type": "sqlitedb",
-        "db": "/tmp/sensor_log.db",
+        "db": "/home/ubuntu/sensor_log.db",
         "mode": "RWC"
     },
     {
-        "id": "3470821542861428",
+        "id": "6be0d646778473c7",
         "type": "global-config",
         "env": [],
         "modules": {

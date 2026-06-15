@@ -1,0 +1,14 @@
+[Unit]
+Description=Sensor API
+After=network.target nodered.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/LearnNodeRed/sensor-api
+ExecStart=/home/ubuntu/LearnNodeRed/sensor-api/sensor-api
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

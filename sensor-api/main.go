@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "/tmp/sensor_log.db")
+	db, err := sql.Open("sqlite3", "/home/ubuntu/sensor_log.db")
 	if err != nil {
 		log.Fatalf("open db: %v", err)
 	}
