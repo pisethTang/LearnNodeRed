@@ -4,6 +4,33 @@ A hardware sensor simulation pipeline built with Node-RED, modelling a recycling
 
 ---
 
+## Dashboard
+
+A vanilla HTML/JS dashboard served via nginx displays live sensor readings, auto-refreshing every 5 seconds with anomaly/normal filtering and a live stats bar.
+
+Access at: [http://34.207.79.250](http://34.207.79.250)
+
+![Dashboard Screenshot](screenshots/dashboard.png)
+
+---
+
+## Live Deployment
+
+Deployed on AWS EC2 (Ubuntu, t2.micro) at [http://34.207.79.250](http://34.207.79.250)
+
+- Node-RED and Go API run as **systemd services** — auto-start on boot, auto-restart on failure
+- nginx serves the dashboard UI on port 80
+- SQLite database stored at `/home/ubuntu/sensor_log.db` (persists across reboots)
+
+### Start/stop services
+
+```bash
+sudo systemctl status nodered    # sensor pipeline
+sudo systemctl status sensor-api # REST API
+```
+
+---
+
 ## What This Simulates
 
 Recycling depots use weight sensors attached to collection bins to track fill levels and detect anomalies (e.g. overfilled bins, foreign objects). This pipeline simulates that environment:
@@ -17,17 +44,25 @@ Recycling depots use weight sensors attached to collection bins to track fill le
 
 ## Architecture
 
-```
-inject (every 5s)
-    └── function: simulate sensor reading
-            └── switch: anomaly_detector (weight_kg > 40?)
-                    ├── [anomaly] change: set topic = "anomaly"
-                    │       └── function: prepare_params
-                    │               └── sqlite: INSERT INTO sensor_log
-                    │
-                    └── [normal] change: set topic = "normal"
-                            └── function: prepare_params
-                                    └── sqlite: INSERT INTO sensor_log
+```mermaid
+flowchart TD
+    A([inject_1\nevery 5s]) --> B[function\nsimulate sensor reading]
+    C([inject_setup\non deploy]) --> D[(sqlite\nCREATE TABLE)]
+
+    B --> E{anomaly_detector\nweight_kg > 40?}
+
+    E -- anomaly --> F[change\ntopic = anomaly]
+    E -- normal --> G[change\ntopic = normal]
+
+    F --> H[function\nprepare_params]
+    G --> I[function\nprepare_params]
+
+    H --> J[(sqlite\nINSERT INTO sensor_log)]
+    I --> J
+
+    style E fill:#f5a623,color:#000
+    style J fill:#4a90d9,color:#fff
+    style D fill:#4a90d9,color:#fff
 ```
 
 ### Node breakdown
@@ -99,7 +134,7 @@ npm install node-red-node-sqlite
 ### Verify data is flowing
 
 ```bash
-sqlite3 /tmp/sensor_log.db "SELECT * FROM sensor_log LIMIT 10;"
+sqlite3 /home/ubuntu/sensor_log.db "SELECT * FROM sensor_log LIMIT 10;"
 ```
 
 ---
@@ -176,7 +211,7 @@ The sqlite3 package includes a C++ binary that must match your OS and Node.js ve
 Node-RED's sqlite node in "Prepared Statement" mode expects SQL parameters in `msg.params`, not `msg.payload`. Fix: add a function node that explicitly maps payload fields into `msg.params` with `$`-prefixed keys before the INSERT node.
 
 ---
-
+<!-- 
 ## Skills Demonstrated
 
 - Node-RED flow design (inject, function, switch, change, sqlite nodes)
@@ -184,3 +219,7 @@ Node-RED's sqlite node in "Prepared Statement" mode expects SQL parameters in `m
 - SQL schema design and parameterised queries
 - Debugging native Node.js modules on Linux/WSL
 - Anomaly detection routing logic
+- AWS EC2 deployment (Ubuntu, t2.micro)
+- systemd service configuration for auto-start and crash recovery
+- nginx static file serving
+- Go REST API with SQLite integration -->
