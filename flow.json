@@ -209,6 +209,35 @@
         "wires": []
     },
     {
+        "id": "7f8e9d0c1b2a3f4e",
+        "type": "inject",
+        "z": "5ac0dd0a80aefc37",
+        "name": "inject_setup",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 820,
+        "y": 460,
+        "wires": [
+            [
+                "af3479de4cc4fa3d"
+            ]
+        ]
+    },
+    {
         "id": "af3479de4cc4fa3d",
         "type": "sqlite",
         "z": "5ac0dd0a80aefc37",
@@ -297,7 +326,7 @@
     {
         "id": "28173aa55b6e1717",
         "type": "sqlitedb",
-        "db": "/home/ubuntu/sensor_log.db",
+        "db": "/home/sething2002/learn-various-tech/LearnNodeRed/sensor-api/sensor_log.db",
         "mode": "RWC"
     },
     {

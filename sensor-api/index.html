@@ -299,7 +299,11 @@
 </main>
 
 <script>
-  const API      = 'http://34.207.79.250:8080/sensors';
+  const API = (location.hostname === 'localhost' ||
+               location.hostname === '127.0.0.1' ||
+               location.protocol === 'file:')
+               ? 'http://localhost:8080/sensors'
+               : 'http://34.207.79.250:8080/sensors';
   const INTERVAL = 5000;
 
   let rows   = [];
@@ -349,7 +353,7 @@
   function render() {
     const visible = rows.filter(r => {
       if (filter === 'anamoly') return r.topic === 'anamoly';
-      if (filter === 'normal')  return r.topic !== 'anomaly';
+      if (filter === 'normal')  return r.topic !== 'anamoly';
       return true;
     });
 

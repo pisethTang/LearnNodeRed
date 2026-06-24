@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch sensor-api",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/sensor-api",
+      "cwd": "${workspaceFolder}/sensor-api",
+      "env": {
+        "SENSOR_DB_PATH": "/tmp/sensor_log.db"
+      },
+      "args": []
+    }
+  ]
+}
