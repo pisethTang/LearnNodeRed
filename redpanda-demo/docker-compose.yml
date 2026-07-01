@@ -1,0 +1,32 @@
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:latest
+    container_name: redpanda
+    command:
+      - redpanda
+      - start
+      - --smp
+      - '1'
+      - --overprovisioned
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092 
+      - --advertise-kafka-addr
+      - internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr
+      - internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr
+      - internal://redpanda:8082,external://localhost:18082
+      - --check=false
+      - --set # Redpanda does not auto-create sensor-reading topics in setup, so we need to explicitly tell it to do that.
+      - redpanda.auto_create_topics_enabled=true
+    ports:
+    # left: laptop's port and right is the containter's port
+    # whern our laptop connects
+      - "19092:19092"
+      - "18082:18082"
+      - "19644:9644"
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+
+volumes:
+  redpanda-data:
